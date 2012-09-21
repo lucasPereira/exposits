@@ -4,7 +4,7 @@
 	var quantidadeDePaginas;
 	
 	function inicializar() {
-		paginaAtual = obterIdentificadorNumerico(window.location.hash);
+		paginaAtual = obterIdentificadorNumerico(Linda.localizacao().hash);
 		adicionarIdentificadores();
 		adicionarTratadores();
 		irParaPaginaAtual();
@@ -24,19 +24,36 @@
 	
 	function irParaPaginaAtual() {
 		var identificador = obterIdentificador(paginaAtual);
-		window.location.hash = "";
-		window.location.hash = identificador;
+		Linda.localizacao().hash = identificador;
+		tornarPaginaAtualVisivel();
 		Linda.selecionar("input.paginaAtual").setAttribute("value", Linda.concatenarComEspaco(paginaAtual, "de", quantidadeDePaginas));
 	}
 	
 	function irParaPaginaPosterior() {
+		tornarPaginaAtualInvisivel()
 		paginaAtual = (paginaAtual < quantidadeDePaginas) ? paginaAtual + 1 : paginaAtual;
 		irParaPaginaAtual();
 	}
 	
 	function irParaPaginaAnterior() {
+		tornarPaginaAtualInvisivel();
 		paginaAtual = (paginaAtual > 1) ? paginaAtual - 1 : paginaAtual;
 		irParaPaginaAtual();
+	}
+	
+	function tornarPaginaAtualInvisivel() {
+		var paginas = Linda.selecionarTodos("section.paginaAtual");
+		var indice;
+		for (indice = 0; indice < paginas.length; indice += 1) {
+			paginas[indice].classList.remove("paginaAtual");
+		}
+	}
+	
+	function tornarPaginaAtualVisivel() {
+		var paginaExibida = Linda.selecionar("#" + obterIdentificador(paginaAtual));
+		if (!Linda.nulo(paginaExibida)) {
+			paginaExibida.classList.add("paginaAtual");
+		}
 	}
 	
 	function obterIdentificador(identificadorNumerico) {
@@ -65,6 +82,6 @@
 		new TratadorDeTeclado(Tecla.ESQUERDA).paraTeclaPressionada(irParaPaginaAnterior);
 	}
 	
-	window.onload = inicializar;
+	new TratadorDePagina().paraCarregada(inicializar);
 }());
 

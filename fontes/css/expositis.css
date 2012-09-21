@@ -40,7 +40,8 @@ body > section > h1 {
 	font-weight: bold;
 }
 
-body > section:target {
+body > section:target,
+body > section.paginaAtual {
 	display: -webkit-box;
 }
 
